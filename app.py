@@ -2,6 +2,7 @@ import os
 from flask import Flask, request
 from dotenv import load_dotenv
 from bot import Bot
+from threading import Thread
 
 # Read settings
 load_dotenv()
@@ -31,7 +32,10 @@ def webhook():
     message_chat_id = message["chat"]["id"]
 
     # Run main workflow
-    bot.workflow(message_text, message_chat_id)
+    workflow_thread = Thread(
+        target=bot.workflow,
+        args=(message_text, message_chat_id))
+    workflow_thread.start()
 
     # Return success
     return {
