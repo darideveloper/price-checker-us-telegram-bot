@@ -48,7 +48,7 @@ class Bot ():
         """
 
         welcome_message = "Enter your product keyword to compare prices " \
-            "on Amazon, eBay, and Walmart!"
+            "on Amazon, eBay, and Walmart:"
         wait_message = "We are obtaining the real-time prices for you "\
             "right now. The process might take around 2 minutes! Hold on!"
         error_message = "Sorry, telegram is not working properly. " \
