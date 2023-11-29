@@ -22,7 +22,7 @@ with open(csv_path, 'r') as csv_file:
 
         # Generate set webhook bot url
         url = f"https://api.telegram.org/bot{bot_token}" \
-            f"/setWebhook?url={WEBHOOK}"
+            f"/setWebhook?url={WEBHOOK}/price_checker_us_bot"
 
         # Send request
         res = requests.get(url)

@@ -39,12 +39,13 @@ class Bot ():
         res = requests.post(url, data=json_data, headers=headers)
         res.raise_for_status()
 
-    def workflow(self, message: str, chat_id: int):
+    def workflow(self, message: str, chat_id: int, bot_name: str):
         """ Main bot workflow (get and send message)
 
         Args:
             message (str): message send by user
             chat_id (int): id of the chat with user
+            bot_name (str): name of the bot in database
         """
 
         welcome_message = "Enter your product keyword to compare prices " \

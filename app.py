@@ -22,9 +22,12 @@ def index():
     }
 
 
-@app.post("/")
-def webhook():
+@app.post("/<bot_name>")
+def webhook(bot_name: str):
     """ Main webhook endpint with workflow
+
+    Args:
+        bot_name (str): bot name in database
     """
     data = request.json
 
@@ -36,7 +39,8 @@ def webhook():
     # Run main workflow
     workflow_thread = Thread(
         target=bot.workflow,
-        args=(message_text, message_chat_id))
+        args=(message_text, message_chat_id, bot_name)
+    )
     workflow_thread.start()
 
     # Return success
