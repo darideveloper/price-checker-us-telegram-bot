@@ -24,6 +24,8 @@ def index():
 
 @app.post("/")
 def webhook():
+    """ Main webhook endpint with workflow
+    """
     data = request.json
 
     # Get message parts
