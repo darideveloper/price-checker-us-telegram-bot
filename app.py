@@ -29,10 +29,22 @@ def webhook(bot_name: str):
     Args:
         bot_name (str): bot name in database
     """
-    data = request.json
 
-    # Get message parts
-    message = data["message"]
+    print(f"Webhook received for {bot_name}")
+
+    # Get message
+    data = request.json
+    message = data.get("message", "")
+
+    # Return default confirmation message
+    if not message:
+        return {
+            "status": "success",
+            "message": "notification received",
+            "data": []
+        }
+
+    # Get message part
     message_text = message["text"]
     message_chat_id = message["chat"]["id"]
 
