@@ -4,19 +4,23 @@ from time import sleep
 import requests
 from dotenv import load_dotenv
 from api import Api
+from database.db import DB
 
 load_dotenv()
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
+
+# Connect with database
+database = DB()
 
 
 class Bot ():
     """ Telegram bot """
 
     def __init__(self):
-        self.token = BOT_TOKEN
-        self.url = f"https://api.telegram.org/bot{self.token}"
+        pass
 
-    def send_message(self, chat_id: int, text: str):
+    def send_message(self, chat_id: int, text: str,
+                     bot_name: str, bot_token: str):
         """ Send message to specified chat
 
         Args:
@@ -24,10 +28,11 @@ class Bot ():
             text (str): text of the message
             bot_token (str): token of the bot
         """
+        message = f"Sending message from {bot_name} to {chat_id}: " \
+            f"{text.replace('\n', '').strip()}"
+        print(message)
 
-        print(f"Sending message to {chat_id}: {text}")
-
-        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         data = {
             "chat_id": chat_id,
             "text": text,
@@ -57,18 +62,25 @@ class Bot ():
         preview_message = "Grab here your comparative " \
             "(ultra-safe link 🔒): \n\n"
 
+        # Get bot token
+        bots_data = database.get_bots()
+        bot_data = list(filter(
+            lambda bot: bot["name"] == bot_name, bots_data
+        ))[0]
+        bot_token = bot_data["token"]
+
         if message in ["/start", "/info"]:
             # Send info message
-            self.send_message(chat_id, welcome_message)
+            self.send_message(chat_id, welcome_message, bot_name, bot_token)
         else:
             # Send waiting message
-            self.send_message(chat_id, wait_message)
+            self.send_message(chat_id, wait_message, bot_name, bot_token)
 
             # Connect with api
             api = Api(keyword=message)
             keyword_sent = api.post_keyword()
             if not keyword_sent:
-                self.send_message(chat_id, error_message)
+                self.send_message(chat_id, error_message, bot_name, bot_token)
                 return None
 
             # Wait for scraping status "done"
@@ -81,7 +93,8 @@ class Bot ():
 
                 # Detect errors
                 if not scraping_status:
-                    self.send_message(chat_id, error_message)
+                    self.send_message(chat_id, error_message,
+                                      bot_name, bot_token)
                     return None
 
                 # End loop
@@ -91,4 +104,4 @@ class Bot ():
             # Get preview url
             preview_url = api.get_preview()
             preview_message += preview_url
-            self.send_message(chat_id, preview_message)
+            self.send_message(chat_id, preview_message, bot_name, bot_token)
