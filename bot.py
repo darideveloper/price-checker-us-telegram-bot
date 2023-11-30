@@ -28,8 +28,8 @@ class Bot ():
             text (str): text of the message
             bot_token (str): token of the bot
         """
-        message = f"Sending message from {bot_name} to {chat_id}: " \
-            f"{text.replace('\n', '').strip()}"
+        text_clean = text.replace('\n', '').strip()
+        message = f"Sending message from {bot_name} to {chat_id}: {text_clean}"
         print(message)
 
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
