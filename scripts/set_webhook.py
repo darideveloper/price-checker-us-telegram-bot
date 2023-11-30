@@ -1,32 +1,41 @@
 import os
-import csv
+import sys
 import requests
+from time import sleep
 from dotenv import load_dotenv
-load_dotenv()
 
-# Get settings
-WEBHOOK = os.getenv('WEBHOOK')
-
-# generate csv path
+# Add folder to path and import db
 current_folder = os.path.dirname(__file__)
 parent_folder = os.path.dirname(current_folder)
-csv_path = os.path.join(parent_folder, 'bots_tokens.csv')
+sys.path.append(parent_folder)
+from database.db import DB
 
-# read csv file
-with open(csv_path, 'r') as csv_file:
-    reader = list(csv.reader(csv_file))
-    for row in reader[1:]:
-        bot_name, bot_token = row
+# Get settings
+load_dotenv()
+WEBHOOK = os.getenv('WEBHOOK')
 
-        print(f"setting webhook for {bot_name}...")
+# Instance of database
+database = DB()
+bots_data = database.get_bots()
 
-        # Generate set webhook bot url
-        url = f"https://api.telegram.org/bot{bot_token}" \
-            f"/setWebhook?url={WEBHOOK}/price_checker_us_bot"
+# Update webhook for each bot
+for bot in bots_data:
 
-        # Send request
-        res = requests.get(url)
-        res.raise_for_status()
+    bot_name = bot["name"]
+    bot_token = bot["token"]
 
-        # Print response
-        print(f"\tStatus code: {res.status_code}")
+    print(f"setting webhook for {bot_name}...")
+
+    # Generate set webhook bot url
+    dynamic_webhook = f"{WEBHOOK}/{bot_name}"
+    url = f"https://api.telegram.org/bot{bot_token}" \
+        f"/setWebhook?url={dynamic_webhook}"
+
+    # Send request
+    res = requests.get(url)
+    res.raise_for_status()
+
+    # Print response
+    print(f"\tStatus code: {res.status_code}")
+    
+    sleep(5)
