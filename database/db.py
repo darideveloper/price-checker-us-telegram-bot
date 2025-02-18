@@ -8,6 +8,7 @@ DB_SERVER = os.getenv("DB_SERVER")
 DB_DATABASE = os.getenv("DB_DATABASE")
 DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_PORT = int(os.getenv("DB_PORT"))
 
 
 class DB (MySQL):
@@ -17,7 +18,7 @@ class DB (MySQL):
         """
 
         # Connect with mysql
-        super().__init__(DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD)
+        super().__init__(DB_SERVER, DB_DATABASE, DB_USERNAME, DB_PASSWORD, DB_PORT)
 
     def get_bots(self) -> list:
         """ Get all bot tokens

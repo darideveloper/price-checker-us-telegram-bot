@@ -4,7 +4,7 @@ import pymysql.cursors
 class MySQL ():
 
     def __init__(self, server: str, database: str,
-                 username: str, password: str):
+                 username: str, password: str, port: int = 3306):
         """ Connect with mysql db
 
         Args:
@@ -18,6 +18,7 @@ class MySQL ():
         self.database = database
         self.username = username
         self.password = password
+        self.port = port
 
         self.connection = None
         self.cursor = None
@@ -45,6 +46,7 @@ class MySQL ():
                 user=self.username,
                 database=self.database,
                 passwd=self.password,
+                port=self.port,
                 cursorclass=pymysql.cursors.DictCursor
             )
 
