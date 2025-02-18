@@ -1,11 +1,12 @@
 import pymysql.cursors
 
 
-class MySQL ():
+class MySQL:
 
-    def __init__(self, server: str, database: str,
-                 username: str, password: str, port: int = 3306):
-        """ Connect with mysql db
+    def __init__(
+        self, server: str, database: str, username: str, password: str, port: int = 3306
+    ):
+        """Connect with mysql db
 
         Args:
             server (str): server host
@@ -23,9 +24,10 @@ class MySQL ():
         self.connection = None
         self.cursor = None
 
-    def run_sql(self, sql: str, auto_commit: bool = True,
-                raise_errors: bool = True) -> list:
-        """ Exceute sql code
+    def run_sql(
+        self, sql: str, auto_commit: bool = True, raise_errors: bool = True
+    ) -> list:
+        """Exceute sql code
             Run sql code in the current data base, and commit it
 
         Args:
@@ -47,13 +49,13 @@ class MySQL ():
                 database=self.database,
                 passwd=self.password,
                 port=self.port,
-                cursorclass=pymysql.cursors.DictCursor
+                cursorclass=pymysql.cursors.DictCursor,
             )
 
         self.cursor = self.connection.cursor()
 
         # Replce "None" columns to "NULL"
-        sql = sql.replace('"None"', 'NULL').replace("None", "NULL")
+        sql = sql.replace('"None"', "NULL").replace("None", "NULL")
 
         # Try to run sql
         try:
@@ -79,7 +81,7 @@ class MySQL ():
 
         return results
 
-    def get_clean_text(self, text: str, keep: list = []) -> str():
+    def get_clean_text(self, text: str, keep: list = []) -> str:
 
         # Fix none values
         if not text:
@@ -97,7 +99,7 @@ class MySQL ():
         return f'"{text}"'
 
     def commit_close(self):
-        """ Commit changes and close connection """
+        """Commit changes and close connection"""
 
         self.connection.commit()
         self.connection.close()
