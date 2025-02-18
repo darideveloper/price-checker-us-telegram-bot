@@ -39,8 +39,5 @@ RUN pip install -r requirements.txt
 # Expose the port that Flask will run on
 EXPOSE 5000
 
-# Run scripts
-CMD ["python", "./scripts/set_webhook.py"]
-
 # Command to run Flask in production with Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
